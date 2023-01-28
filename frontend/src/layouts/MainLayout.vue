@@ -15,7 +15,10 @@
           Quasar App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div><q-btn @click="$q.dark.toggle()" round :color="$q.dark.isActive ? 'black' : 'black'" :icon="$q.dark.isActive ? matLightMode : matDarkMode" >
+          <!-- <q-icon  /> -->
+          </q-btn>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -48,6 +51,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
+import { matDarkMode, matLightMode } from '@quasar/extras/material-icons'
+import { useQuasar } from 'quasar'
+const $q = useQuasar()
+// Dark.set(true) // enable dark mode
+
+
 
 const essentialLinks: EssentialLinkProps[] = [
   {
