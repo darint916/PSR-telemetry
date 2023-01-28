@@ -12,11 +12,10 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Purdue Solar Racing Telemetry
         </q-toolbar-title>
 
         <div><q-btn @click="$q.dark.toggle()" round :color="$q.dark.isActive ? 'black' : 'black'" :icon="$q.dark.isActive ? matLightMode : matDarkMode" >
-          <!-- <q-icon  /> -->
           </q-btn>
         </div>
       </q-toolbar>
@@ -28,10 +27,8 @@
       bordered
     >
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
+        <q-item-label header>
+          Control Tabs
         </q-item-label>
 
         <EssentialLink
@@ -53,10 +50,13 @@ import { ref } from 'vue';
 import EssentialLink, { EssentialLinkProps } from 'components/EssentialLink.vue';
 import { matDarkMode, matLightMode } from '@quasar/extras/material-icons'
 import { useQuasar } from 'quasar'
+import { computed } from 'vue';
+import { usePageContainerBgStyleStore } from 'src/stores/colorGradiants';
 const $q = useQuasar()
 // Dark.set(true) // enable dark mode
 
-
+// const bgGradiant1 = computed(() => 
+// })
 
 const essentialLinks: EssentialLinkProps[] = [
   {
