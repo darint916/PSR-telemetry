@@ -40,3 +40,5 @@ class AddData(Serializable):
         return {
             "success": self.success
         }
+    
+    
