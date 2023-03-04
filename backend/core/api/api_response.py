@@ -40,3 +40,46 @@ class AddData(Serializable):
         return {
             "success": self.success
         }
+
+class Battery(Serializable):
+    
+    data = {
+        'activated': False,
+        'name': 'Battery',
+        'percent': 0,
+    }
+    @staticmethod
+    def serialize(self)->dict:
+        return Battery.data
+    
+class Temperature(Serializable):
+
+    data = {
+        'activated': False,
+        'name': 'Thermostat',
+        'readings_F': 0,
+        'readings_C': 0,
+    }
+    @staticmethod
+    def serialize(self)->dict:
+        return Temperature.data
+
+class Speed(Serializable):
+    
+    data = {
+        'activated': False,
+        'name': 'Odometer',
+        'speed_mph': 0,
+        'speed_km': 0,
+    }
+    @staticmethod
+    def serialize(self)->dict:
+        return Speed.data
+    
+class Rotation:
+    
+    data = {
+        'activated': False,
+        'name': 'Tachometer',
+        ''
+    }
