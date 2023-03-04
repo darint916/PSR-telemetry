@@ -81,5 +81,4 @@ class Rotation:
     data = {
         'activated': False,
         'name': 'Tachometer',
-        ''
     }
