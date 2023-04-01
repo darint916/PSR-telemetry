@@ -1,21 +1,40 @@
 import csv
-import numpy as np
-def csv_to_dataset(filename,data,target):
-    with open(filename,"r",newline="") as f:
-        output = {'data':[],'target':[]}
+
+#Repo style, data accessing locally, assuming schema
+
+#Appends a dictionary of data to a CSV file with the given filename.
+def append_data(filename: str, schema: dict, data: dict) -> int:
+    if not data or not schema: return None
+    #Assuming key 'time' is always present, main key of csv/data, and is unique locator
+    with open(filename, 'r') as f: #adds the id to the data, based on row count
         reader = csv.reader(f)
-        headers = next(reader)
-        #print(headers)
-        column_indexes = {'data':None,'target':None}
-        for i in range(len(headers)):
-            if headers[i] == data:
-                column_indexes["data"] = i
-            if headers[i] == target:
-                column_indexes["target"] = i
-        #print(column_indexes)
+        row = len(list(reader)) 
+        if row == 0: row = 1 #if file empty, start at 1 cuz header insert later
+        data['id'] = row
+    with open(filename, 'a') as f:
+        filekeys = ['id'] + list(schema.keys()) #so it writes id first col
+        writer = csv.DictWriter(f, fieldnames=filekeys)
+        writer.writerow(data)
+        if f.tell() == 0: #check if file empty
+            writer.writeheader()        
+        writer.writerow(data)
+    return data.get('id')
+
+#Retrieves a single row of data from a CSV file with the given filename.
+def get_data(filename: str, schema: dict, time: str = None, id: int = None):
+    if (not time and row == None) or not schema: return None
+    key, value = ('time', time) if time else ('id', id)
+    with open(filename, 'r') as f:
+        filekeys = ['id'] + list(schema.keys())
+        reader = csv.DictReader(f, fieldnames=filekeys)
         for row in reader:
-            output["data"].append(row[column_indexes["data"]])
-            output["target"].append(row[column_indexes["target"]])
-             
-        
-    return output
+            if row.get(key) == value:
+                return row
+    return None
+
+#Retrieves all rows of data from a CSV file with the given filename.
+def get_data_all(filename, schema):
+    if not schema: return None
+    with open(filename, 'r') as f:
+        reader = csv.DictReader(f, fieldnames=schema)
+        return list(reader)

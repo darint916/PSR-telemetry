@@ -1,60 +1,179 @@
-from flask import Blueprint, request
-import datetime
-import logging
-import json
-##get the import tb to call get_db()
-from core.api.api_response import APIResponse, AddData, Battery, Temperature, Speed, Engine, Solar, Chassis
+from flask import Blueprint, request, url_for
+from backend.core.api.data_schema import battery_schema, temperature_schema, speed_schema, engine_schema, solar_schema, chassis_schema, validate_data
+from backend.core.api.db_convert import append_data, get_all_data, get_data_by_id
+
+from core.api.api_response import APIResponse, AddData
 
 api = Blueprint("api", __name__)
 
-#battery, temperature, rpm, speed, 
-@api.route("/telemetry/data/", methods=["POST"])
-def add_data_to_db():
-    text = request.args.get("text")
-    if not text:
-        return APIResponse.error("No text provided", 400).make()
-    db = get_db() ##need db to be set up
-    cursor = db.cursor()
-    cursor.execute("INSERT INTO data (text) VALUES (%s)", (text,)) ## Format this once we see data
-    db.commit()
-    
-    return APIResponse.success(AddData(True)).make()
+#As of 4/1/2023, the comments for each type of endpoint, Post, Get(no query), Get(id) are the same, comments for battery
+#can be used to interpret for all the components: battery, temperature, speed, engine, solar, chassis
 
+csv_file_path = "backend/core/csv_data/"
 
-# @api.route("/telemetry/config/", methods=["GET"]) Might not need this
+"""
+Add data to the CSV file.
+It validates the input data using the schema.
+If the data is valid, it appends it to the CSV file and returns a success response.
+If the data is invalid or could not be added to the CSV file, it returns an error response.
+"""
+@api.route("/telemetry/battery/", methods=["POST"])
+def post_battery():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, battery_schema) #validate data
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "battery.csv", battery_schema, data) #add data to csv
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_battery_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
+"""
+Retrieve all data from the CSV file.
+If the data is retrieved successfully, it returns a success response with the retrieved data.
+If the data could not be retrieved, it returns an error response.
+"""
 @api.route("/telemetry/battery/", methods=["GET"])
 def get_battery_data():
-    if Battery.data:
-        return APIResponse.success(Battery).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "battery.csv", battery_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+"""
+Retrieve data from the CSV file with the specified id or timestamp.
+If the data is retrieved successfully, it returns a success response with the retrieved data.
+If the data could not be retrieved, it returns an error response.
+"""
+@api.route("/telemetry/battery/<int:id>", methods=["GET"])
+def get_battery_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "battery.csv", battery_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "battery.csv", battery_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/temperature/", methods=["POST"])
+def post_temperature():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, temperature_schema) #validate data
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "temperature.csv", temperature_schema, data) #add data to csv
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_temperature_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
 @api.route("/telemetry/temperature/", methods=["GET"])
 def get_temperature_data():
-    if Temperature.data:
-        return APIResponse.success(Temperature).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "temperature.csv", temperature_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/temperature/<int:id>", methods=["GET"])
+def get_temperature_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "temperature.csv", temperature_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "temperature.csv", temperature_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/speed/", methods=["POST"])
+def post_speed():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, speed_schema)
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "speed.csv", speed_schema, data)
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_speed_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
 @api.route("/telemetry/speed/", methods=["GET"])
 def get_speed_data():
-    if Speed.data:
-        return APIResponse.success(Speed).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "speed.csv", speed_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/speed/<int:id>", methods=["GET"])
+def get_speed_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "speed.csv", speed_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "speed.csv", speed_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/engine/", methods=["POST"])
+def post_engine():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, engine_schema)
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "engine.csv", engine_schema, data)
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_engine_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
 @api.route("/telemetry/engine/", methods=["GET"])
 def get_engine_data():
-    if Engine.data:
-        return APIResponse.success(Engine).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "engine.csv", engine_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/engine/<int:id>", methods=["GET"])
+def get_engine_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "engine.csv", engine_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "engine.csv", engine_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/solar/", methods=["POST"])
+def post_solar():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, solar_schema)
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "solar.csv", solar_schema, data)
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_solar_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
 @api.route("/telemetry/solar/", methods=["GET"])
 def get_solar_data():
-    if Solar.data:
-        return APIResponse.success(Solar).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "solar.csv", solar_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/solar/<int:id>", methods=["GET"])
+def get_solar_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "solar.csv", solar_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "solar.csv", solar_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/chassis/", methods=["POST"])
+def post_chassis():
+    data = request.get_json()
+    if not data: return APIResponse.error("No data provided", 400).make()
+    valid, error = validate_data(data, chassis_schema)
+    if not valid: return APIResponse.error(error, 400).make()
+    id = append_data(csv_file_path + "chassis.csv", chassis_schema, data)
+    if not id: return APIResponse.error("Failed to add data", 500).make()
+    new_data_url = url_for('get_chassis_data_by_id', id=id)
+    return APIResponse.post_success(data, new_data_url).make()
 
 @api.route("/telemetry/chassis/", methods=["GET"])
 def get_chassis_data():
-    if Chassis.data:
-        return APIResponse.success(Chassis).make()
-    return APIResponse.success(AddData(True)).make()
+    data = get_all_data(csv_file_path + "chassis.csv", chassis_schema)
+    if not data: return APIResponse.error("Failed to get data or not found", 500).make()
+    return APIResponse.get_success(data).make()
+
+@api.route("/telemetry/chassis/<int:id>", methods=["GET"])
+def get_chassis_data_by_id(id):
+    time = request.args.get('time')
+    if time: data = get_data_by_id(csv_file_path + "chassis.csv", chassis_schema, time=time)
+    else: data = get_data_by_id(csv_file_path + "chassis.csv", chassis_schema, id=id)
+    if not data: return APIResponse.error("Data not found", 404).make()
+    return APIResponse.get_success(data).make()
+
