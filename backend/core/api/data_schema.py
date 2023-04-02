@@ -54,7 +54,7 @@ solar_schema = {
     'solar_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 
-chasiss_schema = {
+chassis_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
     'chassis_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
