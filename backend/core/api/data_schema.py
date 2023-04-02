@@ -18,18 +18,20 @@ def validate_data(data: dict, schema) -> tuple[bool, str]:
         return False, error_message
     return True, None
 
+#Json schema follows Google json formatting - camelCase
+#https://google.github.io/styleguide/jsoncstyleguide.xml?showone=Property_Name_Format#Property_Name_Format
 battery_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
     'activated': {'type': 'boolean', 'required': True},
-    'percent': {'type': 'integer', 'required': True, 'min': 0},
-    'battery_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
+    'percent': {'type': 'integer', 'required': True, 'min': 0, 'max': 100},
+    'batteryHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 
 temperature_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
     'activated': {'type': 'boolean', 'required': True},
-    'temp_F': {'type': 'integer', 'required': True},
-    'temp_c': {'type': 'integer', 'required': True},
+    'tempF': {'type': 'integer', 'required': True},
+    'tempC': {'type': 'integer', 'required': True},
 }
 
 speed_schema = {
@@ -43,19 +45,19 @@ engine_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
     'activated': {'type': 'boolean', 'required': True},
     'rpm': {'type': 'integer', 'required': True, 'min': 0},
-    'tire_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
-    'engine_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
+    'tireHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
+    'engineHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 
 solar_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
     'activated': {'type': 'boolean', 'required': True},
-    'power_generated': {'type': 'integer', 'required': True},
-    'solar_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
+    'powerGenerated': {'type': 'integer', 'required': True},
+    'solarHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 
 chassis_schema = {
     'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
-    'chassis_health': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
+    'chassisHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 

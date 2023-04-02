@@ -14,7 +14,7 @@ class APIResponse:
         self.data = data #The data payload of the API response.
         self.uri = uri  #The URI of the resource that was created, if applicable. Defaults to None.
         
-    def serialize_data(self) -> dict:
+    def serialize_response_body(self) -> dict:
         if (self.data):
             return self.data.serialize()
         return None
@@ -22,18 +22,16 @@ class APIResponse:
     #What is returned to the client upon api call, can be used to limit or add more to the response
     def make(self):
         base = {
-            "error_message": self.error_message,
-            "data": self.serialize_data()
+            "isError": self.is_error,
+            "errorMessage": self.error_message,
+            "response": self.serialize_response_body()
         }
         if (self.uri): #for post requests
-            return jsonify(base), self.status, self.uri
+            return jsonify(base), self.status, {'Location': self.uri} #probably a better way to add uri to header
         return jsonify(base), self.status
     
     
-    '''
-    these static methods are wrappers for API Responses with codes depending on method
-    '''
-    
+    '''these static methods are wrappers for API Responses with codes depending on method'''
     #for error responses
     @staticmethod
     def error(message: str, status: int) -> 'APIResponse':
@@ -48,4 +46,30 @@ class APIResponse:
     @staticmethod
     def post_success(data: dict, location: str) -> 'APIResponse': 
         return APIResponse(False, "Success", 201, data, location)
+    
+'''DTOS essentially, output JSON formatting'''   
+#Define Post response data payload
+class AddData(Serializable):
+    def __init__(self, success: bool, id: int, schema: str):
+        self.success = success
+        self.id = id
+        self.schema = schema #Schema name
         
+    def serialize(self) -> dict:
+        return {
+            'success': self.success,
+            'id': self.id,
+            'schema': self.schema
+        }
+
+#Define Get response data payload
+class GetData(Serializable):
+    def __init__(self, success: bool, data: dict):
+        self.success = success
+        self.data = data
+        
+    def serialize(self) -> dict:
+        return {
+            'success': self.success,
+            'data': self.data
+        }
