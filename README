@@ -1,0 +1,29 @@
+# Solar Telemetry
+
+This repository contains the code for the backend, frontend, and middleman of my application.
+
+## Backend
+
+The backend server can be initialized on your local machine by following these steps:
+
+1. Open a terminal window and navigate to the `backend` folder of this repository.
+2. Run `python main.py` to start the backend server.
+3. The server port and other server settings can be configured in the `main.py` file.
+
+## Frontend
+
+The frontend is still being built using Vue and Quasar. More information will be provided once it's ready.
+
+## Middleman
+
+The middleman is responsible for receiving data from a RS232 signal radio device and posting it to the backend server. If you're using this repository, it assumes that the RS232 signal radio device is physically plugged into your device.
+
+To use the middleman, follow these steps:
+
+1. Open a terminal window and navigate to the `middleman` folder of this repository.
+2. Run `python middleman.py` to start the middleman.
+3. The middleman will automatically start posting data to the backend server once it receives data from the RS232 signal radio device.
+
+
+
+If you have any questions or run into any issues, feel free to contact Darin Tsai or Rohit Kamath

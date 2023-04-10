@@ -1,0 +1,17 @@
+## Backend
+
+Initializing is in root directory readme
+Can be quickstart by running main file from this directory
+
+Utilizes flask, and data is written to csv
+
+`controller.py` holds endpoints / uri routes
+
+`main.py` holds the flask app
+
+`data_schema.py` holds the data schema and validation
+
+`api_response.py` holds api return codes and general formatting
+
+`db_convert.py` does the writing to the csvs
+
