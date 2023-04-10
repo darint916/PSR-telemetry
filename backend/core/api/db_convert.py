@@ -37,4 +37,5 @@ def get_data_all(filename: str, schema: dict) -> list:
     with open(filename, 'r') as f:
         filekeys = ['id'] + list(schema.keys())
         reader = csv.DictReader(f, fieldnames=filekeys)
+        next(reader) #skip header
         return list(reader)
