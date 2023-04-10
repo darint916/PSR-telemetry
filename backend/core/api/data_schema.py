@@ -61,3 +61,57 @@ chassis_schema = {
     'chassisHealth': {'type': 'string', 'required': True, 'allowed': ['healthy', 'warning', 'critical']},
 }
 
+vesc_duty_cycle_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'dutyCycle': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+vesc_stat1_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'rpm': {'type': 'integer', 'required': True, 'min': 0},
+    'currentConsumed': {'type': 'integer', 'required': True, 'min': 0},
+    'dutyCycle': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+vesc_stat2_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'ampHoursConsumed': {'type': 'integer', 'required': True, 'min': 0},
+    'ampHoursRegenerative': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+vesc_stat3_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'wattHoursConsumed': {'type': 'integer', 'required': True, 'min': 0},
+    'wattHoursRegenerative': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+vesc_stat4_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'mosfetTemp': {'type': 'integer', 'required': True, 'min': 0},
+    'motorTemp': {'type': 'integer', 'required': True, 'min': 0},
+    'totalInputCurrent': {'type': 'integer', 'required': True, 'min': 0},
+    'pidPosition': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+vesc_stat5_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'tachometer': {'type': 'integer', 'required': True, 'min': 0},
+    'totalInputVoltage': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+bms_temp_state_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'packTemp': {'type': 'integer', 'required': True, 'min': 0},
+    'highestCellTemp': {'type': 'integer', 'required': True, 'min': 0},
+    'lowestCellTemp': {'type': 'integer', 'required': True, 'min': 0},
+    'relayState': {'type': 'integer', 'required': True, 'min': 0},
+    'stateOfCharge': {'type': 'integer', 'required': True, 'min': 0},
+}
+
+bms_power_schema = {
+    'time': {'type': 'datetime', 'required': True, 'coerce': string_to_datetime},
+    'packCurrent': {'type': 'integer', 'required': True, 'min': 0},
+    'packVoltage': {'type': 'integer', 'required': True, 'min': 0},
+    'highestCellVoltage': {'type': 'integer', 'required': True, 'min': 0},
+    'lowestCellVoltage': {'type': 'integer', 'required': True, 'min': 0},
+}
