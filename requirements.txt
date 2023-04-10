@@ -1,0 +1,7 @@
+typing
+flask
+cerberus
+flask_cors
+requests
+BitVector
+serial
