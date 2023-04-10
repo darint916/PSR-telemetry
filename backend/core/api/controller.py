@@ -112,15 +112,15 @@ def get_vesc_status5():
 def get_vesc_status5_by_id(id):
     return general_get_by_id("vesc_status5.csv", vesc_stat5_schema, id, request.args.get('time'))
 
-@api.route("/telemetry/vesc/duty_cycle", methods=["POST"])
+@api.route("/telemetry/vesc/duty-cycle", methods=["POST"])
 def post_vesc_duty_cycle():
     return general_post("vesc_duty_cycle.csv", vesc_duty_cycle_schema, request.get_json(), 'api.get_vesc_duty_cycle_by_id')
 
-@api.route("/telemetry/vesc/duty_cycle", methods=["GET"])
+@api.route("/telemetry/vesc/duty-cycle", methods=["GET"])
 def get_vesc_duty_cycle():
     return general_get_all("vesc_duty_cycle.csv", vesc_duty_cycle_schema)
 
-@api.route("/telemetry/vesc/duty_cycle/<int:id>", methods=["GET"])
+@api.route("/telemetry/vesc/duty-cycle/<int:id>", methods=["GET"])
 def get_vesc_duty_cycle_by_id(id):
     return general_get_by_id("vesc_duty_cycle.csv", vesc_duty_cycle_schema, id, request.args.get('time'))
 
